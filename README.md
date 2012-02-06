@@ -7,7 +7,9 @@ This is done using libcaca's image conversion tool, img2txt.
 
 Prerequisites, dependencies
 ---------------------------
-You need to have libcaca installed for this script to work.
+You need to have [libcaca][1] installed for this script to work.
+
+[1]: http://caca.zoy.org/wiki/libcaca
 
 Usage
 -----
