@@ -1,0 +1,2 @@
+Asciicover is a simple bash script to display the album art of a currently playing song in a terminal window.
+This is done using libcaca's image conversion tool, img2txt.
