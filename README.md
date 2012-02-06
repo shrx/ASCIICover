@@ -7,9 +7,11 @@ This is done using libcaca's image conversion tool, img2txt.
 
 Prerequisites, dependencies
 ---------------------------
-You need to have [libcaca][1] installed for this script to work.
+You need to have [libcaca][1] and [mpc][2] installed for this script to work. You also need to have [mpd][3] for playing music.
 
 [1]: http://caca.zoy.org/wiki/libcaca
+[2]: http://mpd.wikia.com/wiki/Client:Mpc
+[3]: http://mpd.wikia.com/wiki/Music_Player_Daemon_Wiki
 
 Usage
 -----
