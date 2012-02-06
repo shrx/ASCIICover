@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#released under GPL v3
+#𝓐 𝓶𝓲𝓵𝓵𝓲𝓸𝓷 𝓹𝓲𝓮𝓼 !P3141593qY
+#v1.1
+#6. 2. 2012
+#dependencies: libcaca
+
+function ascii {
+	path=$(mpc -f %file% current)
+	lib1=$(grep -a -m 1 music_directory ~/.mpdconf)
+	lib2=$(echo ${lib1%\"*})
+	librarypath=$(echo ${lib2#*\"})
+	fullpath=$(echo $librarypath"/"$path)
+	dirpath=$(dirname "$fullpath")
+	folderpath=$(echo $dirpath"/folder.jpg")
+	lines=$(tput lines)
+	height=$(echo "$lines-1"|bc)
+	width=$(echo "$height*1.87"|bc)
+	if [ -f "$folderpath" ]; then
+		img2txt -H $height -W $width --dither none "$folderpath"
+	else
+		clear
+	fi
+}
+
+QQUIT="no"
+read -s -t 1 QQUIT
+ascii
+while [ "$QQUIT" != "q" ]; do
+	ascii
+	sleep 1
+	read -s -t 1 QQUIT
+done
