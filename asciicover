@@ -25,10 +25,18 @@ function ascii {
 }
 
 QQUIT="no"
-read -s -t 1 QQUIT
+read -s -t 1 -n 1 QQUIT
+terminal=$(echo $TERM_PROGRAM)
+if [ "$terminal" == "iTerm.app" ]; then
+	osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+20}'
+else
+	printf "\\E[4;388;423t"
+fi
 ascii
 while [ "$QQUIT" != "q" ]; do
 	ascii
 	sleep 1
-	read -s -t 1 QQUIT
+	read -s -t 1 -n 1 QQUIT
 done
+clear
+exit
