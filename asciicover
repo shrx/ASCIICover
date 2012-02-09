@@ -1,8 +1,7 @@
 #!/bin/bash
 
 #released under GPL v3
-#𝓐 𝓶𝓲𝓵𝓵𝓲𝓸𝓷 𝓹𝓲𝓮𝓼 !P3141593qY
-#v1.2
+#v1.2.1
 #10. 2. 2012
 #dependencies: libcaca
 
@@ -24,13 +23,14 @@ function ascii {
 	fi
 }
 
+printf "\033]2;AsciiCover\007"
 QQUIT="no"
 read -s -t 1 -n 1 QQUIT
 terminal=$(echo $TERM_PROGRAM)
 if [ "$terminal" == "iTerm.app" ]; then
 	osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+20}'
 else
-	printf "\\E[4;388;423t"
+	printf "\033[4;388;423t"
 fi
 ascii
 while [ "$QQUIT" != "q" ]; do
