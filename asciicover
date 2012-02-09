@@ -2,8 +2,8 @@
 
 #released under GPL v3
 #𝓐 𝓶𝓲𝓵𝓵𝓲𝓸𝓷 𝓹𝓲𝓮𝓼 !P3141593qY
-#v1.1
-#6. 2. 2012
+#v1.2
+#10. 2. 2012
 #dependencies: libcaca
 
 function ascii {
