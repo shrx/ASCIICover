@@ -19,4 +19,4 @@ Run the script when you want to see the album art of the current song that is pl
 
 The script will show the album's cover image if there's a file named `folder.jpg` in the song's directory.
 
-As of now, you can terminate the script by two commands: `Ctrl+C` or `q+Return`.
+As of now, you can terminate the script by two commands: `Ctrl+C` or `q`.
