@@ -39,5 +39,6 @@ while [ "$QQUIT" != "q" ]; do
 	sleep 1
 	read -s -t 1 -n 1 QQUIT
 done
+printf "\033]2;\007"
 clear
 exit
