@@ -1,9 +1,10 @@
 #!/bin/bash
 
-#released under GPL v3
-#v1.2.1
-#10. 2. 2012
-#dependencies: libcaca
+# released under Creative Commons Attribution-ShareAlike 3.0
+# http://creativecommons.org/licenses/by-sa/3.0/
+# v1.2.1
+# 10. 2. 2012
+# dependencies: libcaca, mpc, mpd, (osascript)
 
 function ascii {
 	path=$(mpc -f %file% current)
