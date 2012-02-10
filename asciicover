@@ -24,7 +24,7 @@ function ascii {
 	fi
 }
 
-printf "\033]2;AsciiCover\007"
+printf "\033]2;ASCIICover\007"
 QQUIT="no"
 read -s -t 1 -n 1 QQUIT
 terminal=$(echo $TERM_PROGRAM)
