@@ -2,9 +2,20 @@
 
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
-# v1.2.1
+# v1.2.2
 # 10. 2. 2012
 # dependencies: libcaca, mpc, mpd, (osascript)
+
+rflag=
+
+while getopts r name
+do
+    case $name in
+    r)    rflag=1;;
+    ?)   printf "Usage: %s:\nResize window: [-r]\n" $0
+          exit 2;;
+    esac
+done
 
 function ascii {
 	path=$(mpc -f %file% current)
@@ -24,14 +35,17 @@ function ascii {
 	fi
 }
 
+clear
 printf "\033]2;ASCIICover\007"
 QQUIT="no"
 read -s -t 1 -n 1 QQUIT
 terminal=$(echo $TERM_PROGRAM)
-if [ "$terminal" == "iTerm.app" ]; then
-	osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+20}'
-else
-	printf "\033[4;388;423t"
+if [ ! -z "$rflag" ]; then
+	if [ "$terminal" == "iTerm.app" ]; then
+		osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+20}'
+	else
+		printf "\033[4;388;423t"
+	fi
 fi
 ascii
 while [ "$QQUIT" != "q" ]; do
