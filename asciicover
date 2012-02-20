@@ -24,8 +24,7 @@ function ascii {
 	librarypath=$(echo ${lib2#*\"})
 	dirpath=$(dirname "$path")
 	folderpath=$(echo $librarypath"/"$dirpath"/folder.jpg")
-	lines=$(tput lines)
-	height=$(echo "$lines"|bc)
+	height=$(tput lines)
 	width=$(echo "$height*1.87"|bc)
 	if [ -f "$folderpath" ]; then
 		art=$(img2txt -H $height -W $width --dither none "$folderpath")
@@ -51,9 +50,11 @@ tput civis
 ascii
 cols=$(tput cols)
 while [ "$QQUIT" != "q" ]; do
-	if [[ "$(dirname "$(mpc -f %file% current)")" != "$dirpath" || "$(tput lines)" != "$lines" || "$(tput cols)" != "$cols" ]]; then
+	if [[ "$(dirname "$(mpc -f %file% current)")" != "$dirpath" || "$(tput lines)" != "$height" || "$(tput cols)" != "$cols" ]]; then
 		ascii
 		cols=$(tput cols)
+	elif [ -z "$(mpc current)" ]; then
+		clear
 	else
 		echo -e "$art""\c"
 	fi
