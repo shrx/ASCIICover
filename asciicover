@@ -2,7 +2,7 @@
 
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
-# v1.3
+# v1.3.1
 # 20. 2. 2012
 # dependencies: libcaca, mpc, mpd
 
@@ -23,14 +23,13 @@ function ascii {
 	lib2=$(echo ${lib1%\"*})
 	librarypath=$(echo ${lib2#*\"})
 	dirpath=$(dirname "$path")
-	fullpath=$(echo $librarypath"/"$dirpath)
-	folderpath=$(echo $fullpath"/folder.jpg")
+	folderpath=$(echo $librarypath"/"$dirpath"/folder.jpg")
 	lines=$(tput lines)
-	height=$(echo "$lines-1"|bc)
+	height=$(echo "$lines"|bc)
 	width=$(echo "$height*1.87"|bc)
 	if [ -f "$folderpath" ]; then
 		art=$(img2txt -H $height -W $width --dither none "$folderpath")
-		echo "$art"
+		echo -e "$art""\c"
 	else
 		clear
 	fi
@@ -43,25 +42,25 @@ read -s -t 1 -n 1 QQUIT
 terminal=$(echo $TERM_PROGRAM)
 if [ ! -z "$rflag" ]; then
 	if [ "$terminal" == "iTerm.app" ]; then
-		osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+20}'
+		osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+6}'
 	else
-		printf "\033[4;388;423t"
+		printf "\033[4;388;406t"
 	fi
 fi
+tput civis
 ascii
 cols=$(tput cols)
 while [ "$QQUIT" != "q" ]; do
 	if [[ "$(dirname "$(mpc -f %file% current)")" != "$dirpath" || "$(tput lines)" != "$lines" || "$(tput cols)" != "$cols" ]]; then
 		ascii
 		cols=$(tput cols)
-	elif [ -z "$(mpc current)" ]; then
-		clear
 	else
-		echo "$art"
+		echo -e "$art""\c"
 	fi
 	sleep 1
 	read -s -t 1 -n 1 QQUIT
 done
+tput cnorm
 printf "\033]2;\007"
 clear
 exit
