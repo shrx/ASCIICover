@@ -2,9 +2,9 @@
 
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
-# v1.2.2
-# 10. 2. 2012
-# dependencies: libcaca, mpc, mpd, (osascript)
+# v1.3
+# 20. 2. 2012
+# dependencies: libcaca, mpc, mpd
 
 rflag=
 
@@ -22,14 +22,15 @@ function ascii {
 	lib1=$(grep -a -m 1 music_directory ~/.mpdconf)
 	lib2=$(echo ${lib1%\"*})
 	librarypath=$(echo ${lib2#*\"})
-	fullpath=$(echo $librarypath"/"$path)
-	dirpath=$(dirname "$fullpath")
-	folderpath=$(echo $dirpath"/folder.jpg")
+	dirpath=$(dirname "$path")
+	fullpath=$(echo $librarypath"/"$dirpath)
+	folderpath=$(echo $fullpath"/folder.jpg")
 	lines=$(tput lines)
 	height=$(echo "$lines-1"|bc)
 	width=$(echo "$height*1.87"|bc)
 	if [ -f "$folderpath" ]; then
-		img2txt -H $height -W $width --dither none "$folderpath"
+		art=$(img2txt -H $height -W $width --dither none "$folderpath")
+		echo "$art"
 	else
 		clear
 	fi
@@ -48,8 +49,16 @@ if [ ! -z "$rflag" ]; then
 	fi
 fi
 ascii
+cols=$(tput cols)
 while [ "$QQUIT" != "q" ]; do
-	ascii
+	if [[ "$(dirname "$(mpc -f %file% current)")" != "$dirpath" || "$(tput lines)" != "$lines" || "$(tput cols)" != "$cols" ]]; then
+		ascii
+		cols=$(tput cols)
+	elif [ -z "$(mpc current)" ]; then
+		clear
+	else
+		echo "$art"
+	fi
 	sleep 1
 	read -s -t 1 -n 1 QQUIT
 done
