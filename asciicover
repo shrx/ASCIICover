@@ -3,7 +3,7 @@
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
 # v1.3.1
-# 20. 2. 2012
+# 21. 2. 2012
 # dependencies: libcaca, mpc, mpd
 
 rflag=
@@ -40,7 +40,7 @@ QQUIT="no"
 read -s -t 1 -n 1 QQUIT
 terminal=$(echo $TERM_PROGRAM)
 if [ ! -z "$rflag" ]; then
-	if [ "$terminal" == "iTerm.app" ]; then
+	if [[ "$terminal" == "iTerm.app" && ! -z "$(defaults read com.googlecode.iterm2|grep "\"Disable Window Resizing\" = 1;")" ]]; then
 		osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+6}'
 	else
 		printf "\033[4;388;406t"
@@ -54,7 +54,7 @@ while [ "$QQUIT" != "q" ]; do
 		ascii
 		cols=$(tput cols)
 	elif [ -z "$(mpc current)" ]; then
-		clear
+		: #do nothing
 	else
 		echo -e "$art""\c"
 	fi
