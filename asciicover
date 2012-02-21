@@ -9,7 +9,7 @@
 #setting optional arguments
 rflag=
 
-while getopts r name
+while getopts :r name
 do
     case $name in
     r)    rflag=1;;
