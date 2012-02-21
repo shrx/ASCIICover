@@ -31,6 +31,7 @@ function ascii {
 		echo -e "$art""\c"
 	else
 		clear
+		art=""
 	fi
 }
 
