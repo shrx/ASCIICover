@@ -6,6 +6,7 @@
 # 21. 2. 2012
 # dependencies: libcaca, mpc, mpd
 
+#setting optional arguments
 rflag=
 
 while getopts r name
@@ -17,6 +18,7 @@ do
     esac
 done
 
+#defining functions
 function ascii {
 	path=$(mpc -f %file% current)
 	lib1=$(grep -a -m 1 music_directory ~/.mpdconf)
@@ -31,10 +33,11 @@ function ascii {
 		echo -e "$art""\c"
 	else
 		clear
-		art=""
+		art=
 	fi
 }
 
+#setting terminal window parameters
 clear
 printf "\033]2;ASCIICover\007"
 QQUIT="no"
@@ -48,6 +51,8 @@ if [ ! -z "$rflag" ]; then
 	fi
 fi
 tput civis
+
+#running the main loop
 ascii
 cols=$(tput cols)
 while [ "$QQUIT" != "q" ]; do
@@ -62,6 +67,8 @@ while [ "$QQUIT" != "q" ]; do
 	sleep 1
 	read -s -t 1 -n 1 QQUIT
 done
+
+#resetting terminal window back to normal
 tput cnorm
 printf "\033]2;\007"
 clear
