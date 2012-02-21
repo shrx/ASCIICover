@@ -43,7 +43,7 @@ if [ ! -z "$rflag" ]; then
 	if [[ "$terminal" == "iTerm.app" && ! -z "$(defaults read com.googlecode.iterm2|grep "\"Disable Window Resizing\" = 1;")" ]]; then
 		osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+6}'
 	else
-		printf "\033[4;388;406t"
+		printf "\033[4;388;380t"
 	fi
 fi
 tput civis
