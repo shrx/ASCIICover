@@ -2,8 +2,8 @@
 
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
-# v1.3.1
-# 21. 2. 2012
+# v1.3.2
+# 9. 3. 2012
 # dependencies: libcaca, mpc, mpd
 
 #setting optional arguments
@@ -11,11 +11,11 @@ rflag=
 
 while getopts :r name
 do
-    case $name in
-    r)    rflag=1;;
-    ?)   printf "Usage: %s:\nResize window: [-r]\n" $0
-          exit 2;;
-    esac
+	case $name in
+	r)	rflag=1;;
+	?)	printf "Usage: Resize window: [-r]\n"
+		exit 2;;
+	esac
 done
 
 #defining functions
@@ -40,10 +40,11 @@ function ascii {
 #setting terminal window parameters
 clear
 printf "\033]2;ASCIICover\007"
-QQUIT="no"
-read -s -t 1 -n 1 QQUIT
+ARGUMENTS="none"
+read -s -t 1 -n 1 ARGUMENTS
 terminal=$(echo $TERM_PROGRAM)
-if [ ! -z "$rflag" ]; then
+	#optional resizing
+if [ -n "$rflag" ]; then
 	if [[ "$terminal" == "iTerm.app" && ! -z "$(defaults read com.googlecode.iterm2|grep "\"Disable Window Resizing\" = 1;")" ]]; then
 		osascript -e 'tell app "iterm" to set the bounds of the first window to {140, 120, 140+400-12, 120+400+6}'
 	else
@@ -55,17 +56,18 @@ tput civis
 #running the main loop
 ascii
 cols=$(tput cols)
-while [ "$QQUIT" != "q" ]; do
-	if [[ "$(dirname "$(mpc -f %file% current)")" != "$dirpath" || "$(tput lines)" != "$height" || "$(tput cols)" != "$cols" ]]; then
+while [ "$ARGUMENTS" != "q" ]; do
+	if [[ "$(dirname "$(mpc -f %file% current)")" != "$dirpath" || "$(tput lines)" != "$height" || "$(tput cols)" != "$cols" || "$ARGUMENTS" == "r" ]]; then
 		ascii
 		cols=$(tput cols)
+		ARGUMENTS="none"
 	elif [ -z "$(mpc current)" ]; then
 		: #do nothing
 	else
 		echo -e "$art""\c"
 	fi
 	sleep 1
-	read -s -t 1 -n 1 QQUIT
+	read -s -t 1 -n 1 ARGUMENTS
 done
 
 #resetting terminal window back to normal
