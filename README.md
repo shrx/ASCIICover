@@ -24,4 +24,4 @@ If you want to manually refresh the script while running, for example if you add
 If you use [iTerm][4], you can also try the experimental option `-d` which enables the high-pixel-density mode by using a smaller font.
 As of now, you can terminate the script by two commands: `Ctrl+c` or `q`.
 
-[3]: http://www.iterm2.com
+[4]: http://www.iterm2.com
