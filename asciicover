@@ -2,24 +2,32 @@
 
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
-# v1.3.2
-# 9. 3. 2012
+# v1.4.0
+# 1. 10. 2012
 # dependencies: libcaca, mpc, mpd
 
 #setting optional arguments
+dflag=
 rflag=
 
-while getopts :r name
+while getopts dr name
 do
 	case $name in
+	d)	dflag=1;;
 	r)	rflag=1;;
-	?)	printf "Usage: Resize window: [-r]\n"
+	?)	printf "Usage: Resize window: [-r]\nIncrease pixel density (use a smaller font)(only works in iTerm): [-d]\n"
 		exit 2;;
 	esac
 done
 
 #defining functions
 function ascii {
+	if [ -z "$dflag" ]; then
+		faktor="1.87"
+	else
+		faktor="1.55"
+	fi
+
 	path=$(mpc -f %file% current)
 	lib1=$(grep -a -m 1 music_directory ~/.mpdconf)
 	lib2=$(echo ${lib1%\"*})
@@ -27,7 +35,7 @@ function ascii {
 	dirpath=$(dirname "$path")
 	folderpath=$(echo $librarypath"/"$dirpath"/folder.jpg")
 	height=$(tput lines)
-	width=$(echo "$height*1.87"|bc)
+	width=$(echo "$height*$faktor"|bc)
 	if [ -f "$folderpath" ]; then
 		art=$(img2txt -H $height -W $width --dither none "$folderpath")
 		echo -e "$art""\c"
@@ -53,6 +61,31 @@ if [ -n "$rflag" ]; then
 fi
 tput civis
 
+# density stuff
+if [ "$terminal" == "iTerm.app" && -n "$dflag" ]; then
+	dim=$(osascript -e "tell application \"iterm\" to get the bounds of the first window" | sed "s/,/-/2" | sed "s/ //g")
+	x1=${dim%%,*}
+	y1=${dim#*,}
+	y1=${y1%%-*}
+	x2=${dim#*-}
+	x2=${x2%%,*}
+	y2=${dim##*,}
+	let "dx=$x2-$x1-10"
+	let "dy=$y2-$y1-20"
+	osascript <<EOF
+	tell application "iterm"
+		activate
+		tell application "System Events" to keystroke "-" using command down
+		tell application "System Events" to keystroke "-" using command down
+		tell application "System Events" to keystroke "-" using command down
+		tell application "System Events" to keystroke "-" using command down
+		tell application "System Events" to keystroke "-" using command down
+		tell application "System Events" to keystroke "-" using command down
+		set the bounds of the first window to {$x1, $y1, $x2, $y2}
+	end tell
+EOF
+fi
+
 #running the main loop
 ascii
 cols=$(tput cols)
@@ -71,6 +104,19 @@ while [ "$ARGUMENTS" != "q" ]; do
 done
 
 #resetting terminal window back to normal
+
+# density stuff
+if [ "$terminal" == "iTerm.app" && -n "$dflag" ]; then
+	osascript <<EOF
+	tell application "iterm"
+		activate
+		tell application "System Events" to keystroke "0" using command down
+	end tell
+EOF
+	sleep 1
+	printf "\033[4;$dy;$dx""t"
+fi
+
 tput cnorm
 printf "\033]2;\007"
 clear
