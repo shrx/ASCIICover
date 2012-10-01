@@ -2,28 +2,36 @@
 
 # released under Creative Commons Attribution-ShareAlike 3.0
 # http://creativecommons.org/licenses/by-sa/3.0/
-# v1.4.0
+# v1.4.1
 # 1. 10. 2012
 # dependencies: libcaca, mpc, mpd
 
 #setting optional arguments
 dflag=
+Dflag=
 rflag=
 
-while getopts dr name
+while getopts dDr name
 do
 	case $name in
 	d)	dflag=1;;
+	D)	Dflag=1;;
 	r)	rflag=1;;
-	?)	printf "Usage: Resize window: [-r]\nIncrease pixel density (use a smaller font)(only works in iTerm): [-d]\n"
+	?)	printf "Usage: Resize window: [-r]\nIncrease pixel density (use a smaller font)(only works in iTerm): [-d]\nIncrease pixel density even more: [-D]\n(If both -d and -D are selected, -d is disabled.)\n"
 		exit 2;;
 	esac
 done
 
+if [ -n "$dflag" -a -n "$Dflag" ]; then
+	dflag=
+fi
+
 #defining functions
 function ascii {
-	if [ -z "$dflag" ]; then
+	if [ -z "$dflag" -a -z "$Dflag" ]; then
 		faktor="1.87"
+	elif [ -n "$Dflag" ]; then
+		faktor="3"
 	else
 		faktor="1.55"
 	fi
@@ -62,28 +70,49 @@ fi
 tput civis
 
 # density stuff
-if [ "$terminal" == "iTerm.app" && -n "$dflag" ]; then
-	dim=$(osascript -e "tell application \"iterm\" to get the bounds of the first window" | sed "s/,/-/2" | sed "s/ //g")
-	x1=${dim%%,*}
-	y1=${dim#*,}
-	y1=${y1%%-*}
-	x2=${dim#*-}
-	x2=${x2%%,*}
-	y2=${dim##*,}
-	let "dx=$x2-$x1-10"
-	let "dy=$y2-$y1-20"
-	osascript <<EOF
-	tell application "iterm"
-		activate
-		tell application "System Events" to keystroke "-" using command down
-		tell application "System Events" to keystroke "-" using command down
-		tell application "System Events" to keystroke "-" using command down
-		tell application "System Events" to keystroke "-" using command down
-		tell application "System Events" to keystroke "-" using command down
-		tell application "System Events" to keystroke "-" using command down
-		set the bounds of the first window to {$x1, $y1, $x2, $y2}
-	end tell
+if [ "$terminal" == "iTerm.app" ]; then
+	if [ -n "$dflag" -o -n "$Dflag" ]; then
+		dim=$(osascript -e "tell application \"iterm\" to get the bounds of the first window" | sed "s/,/-/2" | sed "s/ //g")
+		x1=${dim%%,*}
+		y1=${dim#*,}
+		y1=${y1%%-*}
+		x2=${dim#*-}
+		x2=${x2%%,*}
+		y2=${dim##*,}
+		let "dx=$x2-$x1-10"
+		let "dy=$y2-$y1-20"
+		if [ -n "$Dflag" ]; then
+			osascript <<EOF
+			tell application "iterm"
+				activate
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				set the bounds of the first window to {$x1, $y1, $x2, $y2}
+			end tell
 EOF
+		else
+			osascript <<EOF
+			tell application "iterm"
+				activate
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				tell application "System Events" to keystroke "-" using command down
+				set the bounds of the first window to {$x1, $y1, $x2, $y2}
+			end tell
+EOF
+		fi
+	fi
 fi
 
 #running the main loop
@@ -106,15 +135,17 @@ done
 #resetting terminal window back to normal
 
 # density stuff
-if [ "$terminal" == "iTerm.app" && -n "$dflag" ]; then
-	osascript <<EOF
-	tell application "iterm"
-		activate
-		tell application "System Events" to keystroke "0" using command down
-	end tell
+if [ "$terminal" == "iTerm.app" ]; then
+	if [ -n "$dflag" -o -n "$Dflag" ]; then
+		osascript <<EOF
+		tell application "iterm"
+			activate
+			tell application "System Events" to keystroke "0" using command down
+		end tell
 EOF
-	sleep 1
-	printf "\033[4;$dy;$dx""t"
+		sleep 2
+		printf "\033[4;$dy;$dx""t"
+	fi
 fi
 
 tput cnorm

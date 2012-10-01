@@ -21,7 +21,7 @@ The script will show the album's cover image if there's a file named `folder.jpg
 
 You can use the option `-r` to resize the window to a square dimension automatically on script start.
 If you want to manually refresh the script while running, for example if you added an image after you've already started playing the song, you can press `r`.
-If you use [iTerm][4], you can also try the experimental option `-d` which enables the high-pixel-density mode by using a smaller font.
+If you use [iTerm][4], you can also try the experimental option `-d` or `-D` which enables the high-pixel-density modes by using a smaller font.
 As of now, you can terminate the script by two commands: `Ctrl+c` or `q`.
 
 [4]: http://www.iterm2.com
